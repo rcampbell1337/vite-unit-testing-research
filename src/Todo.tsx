@@ -17,6 +17,8 @@ const Todo: React.FC = () => {
         }
     ])
 
+    const [newTodoContent, setNewTodoContent] = useState<{title: string, body: string}>({title: "", body: ""});
+
     const handleMarkComplete = (id: string) => {
         const newTodos = todoList.map((todo) => {
           if (todo.id === id) {
@@ -26,10 +28,22 @@ const Todo: React.FC = () => {
         });
         
         setTodoList(newTodos);
-      };
+    };
+
+    const submitNewTodo = () => {
+        setTodoList([...todoList, {id: `${Math.floor(Math.random() * 1000)}`, title: newTodoContent.title, body: newTodoContent.body, isComplete: false}])
+    }
 
     return (
         <div>
+            <div style={{display: "flex", "flexDirection": "column"}}>
+                <h3>Add new todo</h3>
+                <label htmlFor="title">Todo Title</label>
+                <input type="text" name="title" onChange={(e) => setNewTodoContent({title: e.target.value, body: newTodoContent.body})}/>
+                <label htmlFor="title">Todo Body</label>
+                <input type="text" name="body" onChange={(e) => setNewTodoContent({title: newTodoContent.title, body: e.target.value})} />
+                <button id="submit" onClick={submitNewTodo}>Submit new task</button>
+            </div>
             <table>
                 <thead>
                     <th>Title</th>
@@ -39,7 +53,7 @@ const Todo: React.FC = () => {
                 <tbody>
                     {todoList.map(todo => {
                         return (
-                            <tr>
+                            <tr className="todo">
                                 <td>{todo.title}</td>
                                 <td>{todo.body}</td>
                                 <td><input type="checkbox" data-is-checked={todo.isComplete} checked={todo.isComplete} onChange={() => {
